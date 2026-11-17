@@ -37,11 +37,8 @@ export default function AdminPortalDesktop() {
 
   return (
     <div className="min-h-screen bg-[#FFF5E1] text-[#2D1810] flex flex-row font-outfit w-full">
-      
-      {/* 1. Permanent Desktop Left Sidebar */}
       <aside className="w-64 bg-[#FFF9F0] border-r border-[#F4A261]/30 p-6 flex flex-col justify-between shrink-0 min-h-screen">
         <div>
-          {/* Logo / Brand */}
           <div className="flex items-center space-x-3 mb-8">
             <div className="w-10 h-10 rounded-2xl bg-gradient-to-tr from-[#FF8800] to-[#F4A261] flex items-center justify-center text-white text-lg shadow-md font-bold">
               ⚡
@@ -56,7 +53,6 @@ export default function AdminPortalDesktop() {
             </div>
           </div>
 
-          {/* Navigation Links */}
           <nav className="space-y-1.5">
             <button
               onClick={() => setActiveTab('decks')}
@@ -94,7 +90,6 @@ export default function AdminPortalDesktop() {
           </nav>
         </div>
 
-        {/* User Profile / Exit */}
         <div className="pt-4 border-t border-orange-200/50 flex items-center justify-between">
           <div className="flex items-center space-x-2.5">
             <div className="w-8 h-8 rounded-full bg-orange-200 flex items-center justify-center font-bold text-xs text-[#92400E]">
@@ -115,10 +110,7 @@ export default function AdminPortalDesktop() {
         </div>
       </aside>
 
-      {/* 2. Main Desktop Workspace */}
       <main className="flex-1 flex flex-col min-w-0 overflow-y-auto min-h-screen">
-        
-        {/* Top Header Bar */}
         <header className="bg-white/80 backdrop-blur-md border-b border-[#F4A261]/20 px-8 py-4 flex items-center justify-between sticky top-0 z-20">
           <div>
             <h2 className="text-xl font-extrabold font-[family-name:var(--font-fredoka)] text-[#2D1810]">
@@ -137,10 +129,7 @@ export default function AdminPortalDesktop() {
           </button>
         </header>
 
-        {/* Content Body: Two-Column Split Grid */}
         <div className="p-8 max-w-7xl w-full mx-auto grid grid-cols-3 gap-6">
-          
-          {/* Left 2 Columns: Active Decks */}
           <div className="col-span-2 space-y-4">
             <div className="flex justify-between items-center mb-1">
               <h3 className="text-xs font-bold uppercase tracking-wider text-[#78350F]">
@@ -156,10 +145,10 @@ export default function AdminPortalDesktop() {
                   <div
                     key={deck.id}
                     onClick={() => setSelectedDeck(deck)}
-                    className={`squircle-card p-5 cursor-pointer transition border-2 flex flex-col justify-between ${
+                    className={`squircle-card p-5 cursor-pointer transition border-2 flex flex-col justify-between bg-white ${
                       isSelected
-                        ? 'border-[#FF8800] ring-4 ring-orange-500/10 shadow-md bg-white'
-                        : 'border-transparent hover:border-orange-200 bg-white/90'
+                        ? 'border-[#FF8800] ring-4 ring-orange-500/10 shadow-md'
+                        : 'border-transparent hover:border-orange-200'
                     }`}
                   >
                     <div>
@@ -188,7 +177,6 @@ export default function AdminPortalDesktop() {
             </div>
           </div>
 
-          {/* Right 1 Column: Sticky Selected Deck Management Panel */}
           <div className="col-span-1">
             <div className="squircle-card p-6 sticky top-24 shadow-md bg-white border border-orange-200">
               <span className="text-[10px] font-extrabold uppercase bg-orange-100 text-[#92400E] px-2.5 py-1 rounded-md">
@@ -219,20 +207,12 @@ export default function AdminPortalDesktop() {
                 >
                   <span>✏️ Manage Questions ({selectedDeck.count})</span>
                 </button>
-                <button
-                  onClick={() => alert(`Quick bulk import tool opened for ${selectedDeck.title}`)}
-                  className="w-full py-3 bg-orange-50 text-[#92400E] hover:bg-orange-100 font-bold text-xs rounded-full transition border border-orange-200 flex items-center justify-center space-x-1.5"
-                >
-                  <span>📥 Quick Import Raw Data</span>
-                </button>
               </div>
             </div>
           </div>
-
         </div>
       </main>
 
-      {/* Create Deck Modal Popup */}
       {isModalOpen && (
         <div className="fixed inset-0 bg-black/40 backdrop-blur-sm flex items-center justify-center p-4 z-50 animate-fadeIn">
           <div className="squircle-card p-6 w-full max-w-md shadow-2xl bg-white border border-orange-200">

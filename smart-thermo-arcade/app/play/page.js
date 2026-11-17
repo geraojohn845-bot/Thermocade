@@ -7,7 +7,6 @@ import { supabase } from '@/lib/supabaseClient';
 export default function PlayScreen() {
   const router = useRouter();
   
-  // Sample thermodynamics questions for the sprint
   const questions = [
     {
       id: 1,
@@ -58,14 +57,13 @@ export default function PlayScreen() {
 
   const currentQ = questions[currentIndex];
 
-  // Timer countdown effect
   useEffect(() => {
     if (isAnswered) return;
     const timer = setInterval(() => {
       setTimeLeft((prev) => {
         if (prev <= 1) {
           clearInterval(timer);
-          handleAnswer(null); // Time's up
+          handleAnswer(null);
           return 0;
         }
         return prev - 1;
@@ -82,7 +80,7 @@ export default function PlayScreen() {
 
     const chosen = currentQ.options.find((o) => o.key === optionKey);
     if (chosen && chosen.correct) {
-      setScore((prev) => prev + 40); // 40 points per correct answer
+      setScore((prev) => prev + 40);
     }
   };
 
@@ -93,11 +91,9 @@ export default function PlayScreen() {
       setIsAnswered(false);
       setTimeLeft(45);
     } else {
-      // 1. Calculate final score
       const finalScore = score;
       localStorage.setItem('thermo_final_score', finalScore);
 
-      // 2. Save score to Supabase Leaderboard table
       const nickname = localStorage.getItem('thermo_player_nickname') || 'KelvinExplorer';
       try {
         const { error } = await supabase
@@ -111,7 +107,6 @@ export default function PlayScreen() {
         console.error('Unexpected error saving score:', err);
       }
 
-      // 3. Head to Game Over / Leaderboard screen
       router.push('/game-over');
     }
   };
@@ -119,7 +114,6 @@ export default function PlayScreen() {
   return (
     <div className="max-w-md mx-auto p-4 min-h-[92vh] flex flex-col justify-between">
       <div>
-        {/* Top Header Bar */}
         <div className="flex items-center justify-between mb-3">
           <button
             onClick={() => router.push('/decks')}
@@ -128,7 +122,6 @@ export default function PlayScreen() {
             ←
           </button>
 
-          {/* Score & Timer Badges */}
           <div className="flex items-center space-x-2">
             <div className="bg-white px-3 py-1 rounded-full shadow-sm border border-orange-100 flex items-center space-x-1 text-xs font-bold text-[#78350F]">
               <span>⭐</span>
@@ -140,7 +133,6 @@ export default function PlayScreen() {
           </div>
         </div>
 
-        {/* Progress Bar */}
         <div className="mb-4">
           <div className="flex justify-between text-xs font-bold text-[#78350F] mb-1">
             <span>QUESTION {currentIndex + 1} / {questions.length}</span>
@@ -154,8 +146,7 @@ export default function PlayScreen() {
           </div>
         </div>
 
-        {/* Question Card */}
-        <div className="squircle-card p-5 mb-4 shadow-md">
+        <div className="squircle-card p-5 mb-4 shadow-md bg-white">
           <div className="flex justify-between items-center mb-2">
             <span className="text-[10px] font-extrabold uppercase bg-orange-50 text-[#D97706] px-2.5 py-1 rounded-md border border-orange-100">
               {currentQ.topic}
@@ -169,7 +160,6 @@ export default function PlayScreen() {
           </h2>
         </div>
 
-        {/* Options List */}
         <div className="space-y-3 mb-4">
           {currentQ.options.map((opt) => {
             let cardStyle = 'bg-white border-gray-200 hover:border-orange-300';
@@ -200,9 +190,8 @@ export default function PlayScreen() {
           })}
         </div>
 
-        {/* Thermo Fact / Explanation Box (Shows after answering) */}
         {isAnswered && (
-          <div className="bg-[#FFF8F0] border border-[#F4A261]/40 rounded-2xl p-4 mb-4 shadow-sm animate-fadeIn">
+          <div className="bg-[#FFF8F0] border border-[#F4A261]/40 rounded-2xl p-4 mb-4 shadow-sm">
             <div className="flex items-center space-x-1.5 text-xs font-bold text-[#D97706] mb-1">
               <span>💡</span>
               <span>THERMO FACT</span>
@@ -214,7 +203,6 @@ export default function PlayScreen() {
         )}
       </div>
 
-      {/* Next Question / Continue Button */}
       {isAnswered && (
         <button
           onClick={handleNextQuestion}
