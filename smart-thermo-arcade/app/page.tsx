@@ -1,69 +1,135 @@
-import Image from "next/image";
+'use client';
 
-export default function Home() {
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+
+export default function WelcomeScreen() {
+  const [nickname, setNickname] = useState('KelvinExplorer');
+  const [mode, setMode] = useState('arcade'); // 'casual' or 'arcade'
+  const router = useRouter();
+
+  // Random nickname generator for arcade feel
+  const handleRandomizeNickname = () => {
+    const prefixes = ['Kelvin', 'Carnot', 'Entropy', 'Joule', 'Rankine', 'Adiabatic'];
+    const suffixes = ['Explorer', 'Master', 'Wizard', 'Cycl', 'Dynamic', 'Sprite'];
+    const randomName = `${prefixes[Math.floor(Math.random() * prefixes.length)]}_${suffixes[Math.floor(Math.random() * suffixes.length)]}`;
+    setNickname(randomName);
+  };
+
+  const handleStartPlaying = (e) => {
+    e.preventDefault();
+    if (!nickname.trim()) return;
+    
+    // Save nickname to localStorage so we can use it across the game and leaderboard
+    localStorage.setItem('thermo_player_nickname', nickname);
+    localStorage.setItem('thermo_game_mode', mode);
+
+    // Head over to Deck Selection
+    router.push('/decks');
+  };
+
   return (
-    <div className="flex flex-col flex-1 items-center justify-center bg-zinc-50 font-sans dark:bg-black">
-      <main className="flex flex-1 w-full max-w-3xl flex-col items-center justify-between py-32 px-16 bg-white dark:bg-black sm:items-start">
-        <Image
-          className="dark:invert h-5 w-[100px]"
-          src="/next.svg"
-          alt="Next.js logo"
-          width={100}
-          height={20}
-          priority
-        />
-        <div className="flex flex-col items-center gap-6 text-center sm:items-start sm:text-left">
-          <h1 className="max-w-xs text-3xl font-semibold leading-10 tracking-tight text-black dark:text-zinc-50">
-            To get started, edit the{" "}
-            <code className="rounded bg-black/[.06] px-1.5 py-0.5 font-mono text-[0.9em] dark:bg-white/[.08]">
-              page.tsx
-            </code>{" "}
-            file.
-          </h1>
-          <p className="max-w-md text-lg leading-8 text-zinc-600 dark:text-zinc-400">
-            Looking for a starting point or more instructions? Head over to{" "}
-            <a
-              href="https://vercel.com/templates?framework=next.js&utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Templates
-            </a>{" "}
-            or the{" "}
-            <a
-              href="https://nextjs.org/learn?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-              className="font-medium text-zinc-950 dark:text-zinc-50"
-            >
-              Learning
-            </a>{" "}
-            center.
-          </p>
-        </div>
-        <div className="flex flex-col gap-4 text-base font-medium sm:flex-row">
-          <a
-            className="flex h-12 w-full items-center justify-center gap-2 rounded-full bg-foreground px-5 text-background transition-colors hover:bg-[#383838] dark:hover:bg-[#ccc] md:w-[158px]"
-            href="https://vercel.com/new?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
+    <div className="flex flex-col items-center justify-center min-h-[90vh] py-6">
+      {/* Top Badge */}
+      <div className="bg-[#FFE5CC] text-[#D97706] text-xs font-bold px-4 py-1.5 rounded-full mb-3 tracking-wide uppercase shadow-sm">
+        🔥 Physics & Chemistry Quiz
+      </div>
+
+      {/* Main Arcade Title */}
+      <h1 className="text-3xl md:text-4xl font-extrabold text-center font-[family-name:var(--font-fredoka)] tracking-tight text-[#2D1810] mb-2 leading-tight">
+        SMART THERMO <span className="text-[#FF8800]">ARCADE</span>
+      </h1>
+      <p className="text-sm text-[#78350F] text-center mb-6 max-w-xs font-medium">
+        Test your thermodynamics mastery through high-energy arcade challenges!
+      </p>
+
+      {/* Main Squircle Container Card */}
+      <div className="squircle-card p-6 w-full max-w-sm shadow-xl">
+        <form onSubmit={handleStartPlaying} className="space-y-5">
+          
+          {/* Nickname Input Field */}
+          <div>
+            <div className="flex justify-between items-center mb-1.5">
+              <label className="text-xs font-bold uppercase tracking-wider text-[#78350F]">
+                Player Nickname
+              </label>
+              <span className="text-[10px] text-orange-600 font-semibold bg-orange-50 px-2 py-0.5 rounded">Required</span>
+            </div>
+            <div className="relative flex items-center">
+              <span className="absolute left-3 text-lg">🤖</span>
+              <input
+                type="text"
+                value={nickname}
+                onChange={(e) => setNickname(e.target.value)}
+                maxLength={20}
+                className="w-full pl-10 pr-10 py-3 bg-[#FFF9F0] border border-[#F4A261]/40 rounded-2xl font-semibold text-[#2D1810] focus:outline-none focus:ring-2 focus:ring-[#FF8800] transition"
+                placeholder="Enter nickname..."
+                required
+              />
+              <button
+                type="button"
+                onClick={handleRandomizeNickname}
+                title="Generate Random Nickname"
+                className="absolute right-3 text-gray-500 hover:text-[#FF8800] text-lg transition"
+              >
+                🎲
+              </button>
+            </div>
+          </div>
+
+          {/* Gameplay Mode Selection */}
+          <div>
+            <label className="block text-xs font-bold uppercase tracking-wider text-[#78350F] mb-2">
+              Select Gameplay Mode
+            </label>
+            <div className="grid grid-cols-2 gap-3">
+              {/* Casual Practice Option */}
+              <div
+                onClick={() => setMode('casual')}
+                className={`cursor-pointer p-3 rounded-2xl border-2 transition flex flex-col items-center text-center ${
+                  mode === 'casual'
+                    ? 'border-[#FF8800] bg-orange-50/50 shadow-sm'
+                    : 'border-gray-200 bg-white hover:border-gray-300'
+                }`}
+              >
+                <span className="text-xl mb-1">🧘</span>
+                <h3 className="font-bold text-xs text-[#2D1810]">Casual Practice</h3>
+                <p className="text-[10px] text-gray-500 mt-0.5">Untimed • Revives</p>
+              </div>
+
+              {/* Arcade Rush Option */}
+              <div
+                onClick={() => setMode('arcade')}
+                className={`cursor-pointer p-3 rounded-2xl border-2 transition flex flex-col items-center text-center ${
+                  mode === 'arcade'
+                    ? 'border-[#FF8800] bg-orange-50/50 shadow-sm'
+                    : 'border-gray-200 bg-white hover:border-gray-300'
+                }`}
+              >
+                <span className="text-xl mb-1">⏱️</span>
+                <h3 className="font-bold text-xs text-[#2D1810]">Arcade Rush</h3>
+                <p className="text-[10px] text-gray-500 mt-0.5">60s • 2x Multiplier</p>
+              </div>
+            </div>
+          </div>
+
+          {/* Start Playing Button */}
+          <button
+            type="submit"
+            className="btn-arcade w-full py-4 text-base flex items-center justify-center space-x-2 mt-2"
           >
-            <Image
-              className="dark:invert h-[14px] w-4"
-              src="/vercel.svg"
-              alt="Vercel logomark"
-              width={16}
-              height={14}
-            />
-            Deploy Now
-          </a>
-          <a
-            className="flex h-12 w-full items-center justify-center rounded-full border border-solid border-black/[.08] px-5 transition-colors hover:border-transparent hover:bg-black/[.04] dark:border-white/[.145] dark:hover:bg-[#1a1a1a] md:w-[158px]"
-            href="https://nextjs.org/docs?utm_source=create-next-app&utm_medium=appdir-template-tw&utm_campaign=create-next-app"
-            target="_blank"
-            rel="noopener noreferrer"
-          >
-            Documentation
+            <span>Start Playing</span>
+            <span className="text-xl">→</span>
+          </button>
+        </form>
+
+        {/* Footer info link */}
+        <div className="mt-4 text-center">
+          <a href="#rules" className="text-xs text-[#92400E] hover:underline font-medium">
+            ❓ How to play? • Rules & Scoring
           </a>
         </div>
-      </main>
+      </div>
     </div>
   );
 }
